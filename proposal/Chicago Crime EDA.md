@@ -10,6 +10,7 @@
 - Map of crimes
     - Break down by type
     - Break down by arrest
+- Incorporate **movement**: changes over time
 
 ## Related Questions
 
