@@ -9,3 +9,7 @@
 ## Final Project
 
 - Heat map expected
+
+## To Explore
+
+- Is there something special about district #31?
