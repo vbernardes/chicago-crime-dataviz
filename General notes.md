@@ -9,6 +9,8 @@
 ## Final Project
 
 - Heat map expected
+- Be conservative on the conclusions
+- Make sure the external datasets can be successfully matched
 
 ## To Explore
 
