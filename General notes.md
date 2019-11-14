@@ -11,7 +11,9 @@
 - Heat map expected
 - Be conservative on the conclusions
 - Make sure the external datasets can be successfully matched
+- Show the data at several levels of detail
 
 ## To Explore
 
 - Is there something special about district #31?
+- How to employ small multiples
