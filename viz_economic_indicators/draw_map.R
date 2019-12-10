@@ -1,27 +1,45 @@
-# Read Community Areas coordinates
-comm_areas_shape <- readShapePoly('../data/Boundaries - Community Areas (current)/geo_export_5b358314-1bdf-449f-84dd-bb266d9a1459.shp')
-comm_areas_points <- fortify(comm_areas_shape)
+# Setup environment ----
+library(broom)
+library(rgdal)
+library(rgeos)
+library(ggplot2)
+library(maptools)
+library(maps)
+library(mapproj)
 
-draw_comm_areas <- function() {
-  # Using ggplot
-  ggplot() +
-    geom_polygon(aes(x = long,
+# Read Community Areas coordinates
+comm_areas_shape <- readOGR(dsn = '../data/Boundaries - Community Areas (current)',
+                            layer = 'geo_export_5b358314-1bdf-449f-84dd-bb266d9a1459')
+fortified_comm_areas <- tidy(comm_areas_shape, region = 'area_numbe')
+
+
+draw_comm_areas <- function(highlight_comm, indicator) {
+  # this function receives a data.frame with 0 or 1 row
+  
+  # main map with no highlighted communities
+  main_plot <- ggplot() +
+    geom_polygon(data = fortified_comm_areas,
+                 aes(x = long,
                      y = lat,
-                     group = group,
-                     alpha = 0.7),
-                     # fill = Below.Poverty.Level),
-                 data = comm_areas_points) +
-    guides(alpha=FALSE) +
+                     group = group),
+                 fill = '#FFDED4',
+                 color = '#FFCCBA') +
+    guides(fill=FALSE, color=FALSE) +
     coord_map('mercator') +
     theme_void()
   
-  # # Using ggvis
-  # comm_areas_points %>%
-  #   group_by(group, id) %>%
-  #   ggvis(~long, ~lat) %>%
-  #   layer_paths(strokeOpacity:=0.15) %>%
-  #   hide_legend('fill') %>%
-  #   hide_axis("x") %>% hide_axis("y") %>%
-  #   set_options(width=400, height=600, keep_aspect=TRUE) %>%
-  #   bind_shiny('map')
+  if (nrow(highlight_comm) == 0) {
+    main_plot
+  }
+  else {
+    # plot highlighted community
+    main_plot +
+      geom_polygon(aes(x = long,
+                       y = lat,
+                       group = group,
+                       fill = '#FF8363'),
+                   data = subset(fortified_comm_areas,
+                                 id == highlight_comm$Community.Area)) +
+      guides(fill=FALSE)
+  }
 }
