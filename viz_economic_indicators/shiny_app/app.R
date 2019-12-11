@@ -14,9 +14,9 @@ scatter_indicators <- function(x,
   # set plot labels
   y_label <- ylab('Crimes per Capita')
   x_label <- xlab(switch (x,
-                          'Below.Poverty.Level' = '% of People Below Poverty Level',
-                          'Unemployment' = 'Unemployment Rate',
-                          'Per.Capita.Income' = 'Per Capita Income'))
+                          'Below.Poverty.Level' = 'Percentage of People Below Poverty Level',
+                          'Unemployment' = 'Unemployment Rate (%)',
+                          'Per.Capita.Income' = 'Per Capita Income (US$)'))
   # set guide title
   guide_title <- switch (color_by,
                          'Proportion.of.Violent.Crimes' = 'Proportion of\nViolent Crimes',
@@ -74,8 +74,13 @@ point_in_comm <- function(point_coords) {
 ui <- fluidPage(
   style = 'padding: 5%; font-size: small;',
   fluidRow(
-    h1("Crimes and Poverty"),
-    p('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    h1('Crime and Poverty in Chicago'),
+    p('People in poorer communities not only have to struggle with economic
+      difficulties, but are also more exposed to crime. The plot below presents
+      a snapshot of Chicago in 2011, and shows a strong association between the
+      socioeconomic status of a community and crime activity. Each point
+      represents a community and is placed according to the selected
+      socioeconomic indicator and the number of crimes per capita.')
   ),
 
   fluidRow(
