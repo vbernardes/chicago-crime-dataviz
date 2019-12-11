@@ -3,7 +3,7 @@ library(shiny)
 library(SDMTools)
 
 # Load data & resources ----
-eco_indicators_df <- read.csv('data/Economic Indicators and Crime 2015.csv')
+eco_indicators_df <- read.csv('data/Economic Indicators and Crime 2011.csv')
 source('draw_map.R')
 
 # Helper functions ----
