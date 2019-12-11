@@ -1,6 +1,5 @@
 # Setup environment ----
 library(shiny)
-library(shinyBS)
 library(SDMTools)
 
 # Load data & resources ----
@@ -12,15 +11,32 @@ scatter_indicators <- function(x,
                                y = 'Crimes.per.Capita',
                                color_by = 'Proportion.of.Violent.Crimes',
                                highlight) {
+  # set plot labels
+  y_label <- ylab('Crimes per Capita')
+  x_label <- xlab(switch (x,
+                          'Below.Poverty.Level' = '% of People Below Poverty Level',
+                          'Unemployment' = 'Unemployment Rate',
+                          'Per.Capita.Income' = 'Per Capita Income'))
+  # set guide title
+  guide_title <- switch (color_by,
+                         'Proportion.of.Violent.Crimes' = 'Proportion of\nViolent Crimes',
+                         'Proportion.of.Arrests' = 'Proportion\nof Arrests')
   
   main_scatter <- ggplot(data = eco_indicators_df,
                          aes_string(x, y, color = color_by)) +
-    geom_point() +
+    geom_point(size = 3) +
     scale_color_continuous(
-      # name = 'Proportion of Violent Crimes',
+      guide = guide_colorbar(guide_title,
+                             keywidth = 1,
+                             title.hjust = 0.5,
+                             label.hjust = 0.8),
       low='white', high='red'
     ) +
+    x_label +
+    y_label +
     theme_minimal()
+  
+  
   
   if (nrow(highlight) == 0) {
     main_scatter
@@ -35,7 +51,7 @@ scatter_indicators <- function(x,
                  alpha = 0.2,
                  fill = 'red',
                  # color = 'red',
-                 size = 7) +
+                 size = 9) +
       guides(fill=FALSE) +
       scale_fill_continuous(low='white', high='red')
   }
@@ -44,7 +60,7 @@ scatter_indicators <- function(x,
 point_in_comm <- function(point_coords) {
   # return community ID of point in point_coords.
   for (id in seq(1,77)) {
-    comm_boundaries <- fortified_comm_areas[fortified_comm_areas$id==id, 1:2]
+    comm_boundaries <- fortified_comms[fortified_comms$id==id, 1:2]
     if (pnt.in.poly(point_coords, comm_boundaries)$pip) {
       return(as.numeric(id))
     }
@@ -56,14 +72,16 @@ point_in_comm <- function(point_coords) {
 
 # UI ----
 ui <- fluidPage(
-  br(),
+  style = 'padding: 5%; font-size: small;',
   fluidRow(
     h1("Crimes and Poverty"),
     p('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
   ),
-  
+
   fluidRow(
+    style = 'height:600px;',
     splitLayout(cellWidths = c("25%", "75%"),
+                style = 'margin-bottom: 20%;',
                 # Left column:
                 verticalLayout(
                   plotOutput('map',
@@ -71,13 +89,13 @@ ui <- fluidPage(
                   selectInput('indicator',
                               label = 'Socioeconomic Indicator',
                               choices = list(
-                                '% Below Poverty Level' = "Below.Poverty.Level",
+                                '% Below Poverty Level' = 'Below.Poverty.Level',
                                 'Unemployment Rate' = 'Unemployment',
                                 'Per Capita Income' = "Per.Capita.Income"
                               )
                   ),
                   selectInput('color_by',
-                              label = 'Color by',
+                              label = 'Color shows',
                               choices = list(
                                 "Proportion of Arrests" = "Proportion.of.Arrests",
                                 "Proportion of Violent Crimes" = "Proportion.of.Violent.Crimes"
@@ -86,17 +104,15 @@ ui <- fluidPage(
                   )
                 ),
                 # Right column
-                verticalLayout(
-                  plotOutput('plot', click = 'scatter_click'),
-                  # test for reading user clicks on plot
-                  verbatimTextOutput('scatter_click_info')
-                )
+                plotOutput('plot',
+                           height = '500px',
+                           click = 'scatter_click')
     )
   )
 )
 
 # Server logic ----
-server <- function(input, output) {
+server <- function(input, output, session) {
   highlighted_comm <- reactiveVal(data.frame()) # initialize w/ empty data frame
   
   output$plot <- renderPlot({
@@ -122,16 +138,6 @@ server <- function(input, output) {
     }
   })
   
-  output$scatter_click_info <- renderPrint({
-    paste(highlighted_comm()$Community.Area,
-          highlighted_comm()$Community.Area.Name,
-          input$map_click[1],input$map_click[2])
-  })
-  
-  output$scatter_hover_info <- renderPrint({
-    paste(highlighted_comm()$Community.Area.Name)
-  })
-  
   output$map <- renderPlot({
     draw_comm_areas(highlighted_comm(),
                     input$indicator)
@@ -139,4 +145,4 @@ server <- function(input, output) {
 }
 
 # Run the app ----
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)

@@ -10,7 +10,7 @@ library(mapproj)
 # Read Community Areas coordinates
 comm_areas_shape <- readOGR(dsn = '../data/Boundaries - Community Areas (current)',
                             layer = 'geo_export_5b358314-1bdf-449f-84dd-bb266d9a1459')
-fortified_comm_areas <- tidy(comm_areas_shape, region = 'area_numbe')
+fortified_comms <- tidy(comm_areas_shape, region = 'area_numbe')
 
 
 draw_comm_areas <- function(highlight_comm, indicator) {
@@ -18,7 +18,7 @@ draw_comm_areas <- function(highlight_comm, indicator) {
   
   # main map with no highlighted communities
   main_plot <- ggplot() +
-    geom_polygon(data = fortified_comm_areas,
+    geom_polygon(data = fortified_comms,
                  aes(x = long,
                      y = lat,
                      group = group),
@@ -32,14 +32,14 @@ draw_comm_areas <- function(highlight_comm, indicator) {
     main_plot
   }
   else {
+    comm_id <- highlight_comm$Community.Area
     # plot highlighted community
     main_plot +
       geom_polygon(aes(x = long,
                        y = lat,
-                       group = group,
-                       fill = '#FF8363'),
-                   data = subset(fortified_comm_areas,
-                                 id == highlight_comm$Community.Area)) +
+                       group = group),
+                       fill = '#FF8363',
+                   data = fortified_comms[fortified_comms$id == comm_id,]) +
       guides(fill=FALSE)
   }
 }
