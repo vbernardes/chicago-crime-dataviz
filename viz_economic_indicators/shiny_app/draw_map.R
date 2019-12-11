@@ -8,7 +8,7 @@ library(maps)
 library(mapproj)
 
 # Read Community Areas coordinates
-comm_areas_shape <- readOGR(dsn = '../data/Boundaries - Community Areas (current)',
+comm_areas_shape <- readOGR(dsn = 'data/Boundaries - Community Areas (current)',
                             layer = 'geo_export_5b358314-1bdf-449f-84dd-bb266d9a1459')
 fortified_comms <- tidy(comm_areas_shape, region = 'area_numbe')
 
