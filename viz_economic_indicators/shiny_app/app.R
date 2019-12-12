@@ -1,6 +1,7 @@
 # Setup environment ----
 library(shiny)
 library(SDMTools)
+library(plotly)
 
 # Load data & resources ----
 eco_indicators_df <- read.csv('data/Economic Indicators and Crime 2011.csv')
@@ -12,31 +13,26 @@ scatter_indicators <- function(x,
                                color_by = 'Proportion.of.Violent.Crimes',
                                highlight) {
   # set plot labels
-  y_label <- ylab('Crimes per Capita')
-  x_label <- xlab(switch (x,
-                          'Below.Poverty.Level' = 'Percentage of People Below Poverty Level',
-                          'Unemployment' = 'Unemployment Rate (%)',
-                          'Per.Capita.Income' = 'Per Capita Income (US$)'))
+  y_label <- 'Crimes per Capita'
+  x_label <- switch (x,
+                     'Below.Poverty.Level' = 'Percentage of People Below Poverty Level',
+                     'Unemployment' = 'Unemployment Rate (%)',
+                     'Per.Capita.Income' = 'Per Capita Income (US$)')
   # set guide title
   guide_title <- switch (color_by,
                          'Proportion.of.Violent.Crimes' = 'Proportion of\nViolent Crimes',
                          'Proportion.of.Arrests' = 'Proportion\nof Arrests')
   
-  main_scatter <- ggplot(data = eco_indicators_df,
-                         aes_string(x, y, color = color_by)) +
-    geom_point(size = 3) +
-    scale_color_continuous(
-      guide = guide_colorbar(guide_title,
-                             keywidth = 1,
-                             title.hjust = 0.5,
-                             label.hjust = 0.8),
-      low='white', high='red'
-    ) +
-    x_label +
-    y_label +
-    theme_minimal()
-  
-  
+  main_scatter <- plot_ly(eco_indicators_df,
+                          x=~get(x), y=~get(y),
+                          color=~get(color_by),
+                          # name = guide_title,
+                          colors='Reds',
+                          hoverinfo = 'text',
+                          text = ~paste(Community.Area.Name)) %>%
+    layout(xaxis = list(title=x_label, zeroline=FALSE, fixedrange=TRUE),
+           yaxis = list(title=y_label, zeroline=FALSE, fixedrange=TRUE)) %>%
+    config(displayModeBar = F)
   
   if (nrow(highlight) == 0) {
     main_scatter
@@ -86,11 +82,9 @@ ui <- fluidPage(
   fluidRow(
     style = 'height:600px;',
     splitLayout(cellWidths = c("25%", "75%"),
-                style = 'margin-bottom: 20%;',
                 # Left column:
                 verticalLayout(
-                  plotOutput('map',
-                             click = 'map_click'),
+                  plotlyOutput('map'),
                   selectInput('indicator',
                               label = 'Socioeconomic Indicator',
                               choices = list(
@@ -109,9 +103,7 @@ ui <- fluidPage(
                   )
                 ),
                 # Right column
-                plotOutput('plot',
-                           height = '500px',
-                           click = 'scatter_click')
+                plotlyOutput('plot')
     )
   )
 )
@@ -120,7 +112,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   highlighted_comm <- reactiveVal(data.frame()) # initialize w/ empty data frame
   
-  output$plot <- renderPlot({
+  output$plot <- renderPlotly({
     scatter_indicators(x = input$indicator,
                        color_by = input$color_by,
                        highlight = highlighted_comm())
@@ -143,7 +135,9 @@ server <- function(input, output, session) {
     }
   })
   
-  output$map <- renderPlot({
+  output$map <- renderPlotly({
+    # read hover data
+    # eventdata <- event_data("plotly_hover", source = "map")
     draw_comm_areas(highlighted_comm(),
                     input$indicator)
   })
