@@ -37,9 +37,10 @@ ggplot(data = unemp_crimes,
   theme_minimal() +
   theme(plot.title = element_text(size=18)) +
   labs(title = 'Crime and Unemployment During the Crisis',
-       subtitle = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Donec massa sapien faucibus
-et molestie ac. Faucibus a pellentesque sit amet.') +
+       subtitle = 'According to the United Nations Office on Drugs and Crime, economically-motivated
+crimes are more likely to increase during periods of economic downturn. This plot
+includes crimes related to theft, robbery and burglary, and shows their relationship
+with unemployment in the city of Chicago.') +
   annotate(
     'label', label = 'The downward trend in the number of crimes
 was interrupted when the financial crisis
@@ -49,7 +50,7 @@ before the economic recovery.',
     x = 6, xend = 7.5, y = 125000, yend = 135000, size = 3,
     color = 'dimgrey'
   ) +
-  # color text in annotation. Really, ggplot?
+  # add color text on top of annotation. Really, ggplot?
   annotate(
     'text', label = '                                          
                                          
