@@ -20,7 +20,8 @@ scatter_indicators <- function(shared_df,
   # set guide title
   guide_title <- switch (color_by,
                          'Proportion.of.Violent.Crimes' = 'Proportion of\nViolent Crimes',
-                         'Proportion.of.Arrests' = 'Proportion\nof Arrests')
+                         'Proportion.of.Arrests' = 'Proportion\nof Arrests',
+                         'Proportion.of.Financial.Crimes' = 'Proportion of\nFinancial Crimes')
   
   main_scatter <- plot_ly(shared_df,
                           x=~get(x), y=~get(y),
@@ -68,7 +69,8 @@ ui <- fluidPage(
                               label = 'Color shows',
                               choices = list(
                                 "Proportion of Arrests" = "Proportion.of.Arrests",
-                                "Proportion of Violent Crimes" = "Proportion.of.Violent.Crimes"
+                                "Proportion of Violent Crimes" = "Proportion.of.Violent.Crimes",
+                                "Proportion of Financial Crimes" = "Proportion.of.Financial.Crimes"
                               ),
                               selected = "Proportion.of.Violent.Crimes"
                   )
