@@ -5,6 +5,6 @@ account: vitorsb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1607734
-bundleId: 2676388
+bundleId: 2679067
 url: https://vitorsb.shinyapps.io/shiny_app/
-when: 1576612651.69864
+when: 1576695165.14659
