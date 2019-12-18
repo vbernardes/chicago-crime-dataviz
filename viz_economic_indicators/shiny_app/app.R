@@ -40,7 +40,7 @@ scatter_indicators <- function(shared_df,
 
 # UI ----
 ui <- fluidPage(
-  style = 'padding: 5%; font-size: small;',
+  style = 'padding: 5%;',
   fluidRow(
     h1('Crime and Poverty in Chicago'),
     p('People in poor communities not only have to struggle with economic
