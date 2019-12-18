@@ -18,7 +18,9 @@ draw_comm_areas <- function(shared_df) {
                        hoverlabel = list(bgcolor="#B01117",
                                          font = list(color='white')),
                        hoverinfo = "text",
-                       text = ~paste(community),
+                       text = ~paste(community,
+                                     '\nCrimes per Capita:', round(Crimes.per.Capita, digits = 3),
+                                     '\nUnemployment: ', round(Unemployment, digits = 1)),
                        source = 'map',
                        showlegend = FALSE) %>%
     config(displayModeBar = F)
