@@ -27,4 +27,6 @@ draw_comm_areas <- function(shared_df) {
                        source = 'map',
                        showlegend = FALSE) %>%
     config(displayModeBar = F)
+  
+  return(main_plot)
 }

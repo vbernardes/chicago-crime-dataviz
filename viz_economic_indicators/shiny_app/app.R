@@ -41,6 +41,8 @@ scatter_indicators <- function(shared_df,
     layout(xaxis = list(title=x_label, zeroline=FALSE, fixedrange=TRUE),
            yaxis = list(title=y_label, zeroline=FALSE, fixedrange=TRUE)) %>%
     config(displayModeBar = F)
+  
+  return(main_scatter)
 }
 
 
@@ -82,13 +84,20 @@ ui <- fluidPage(
                   )
                 ),
                 # Right column
-                plotlyOutput('plot')
+                verticalLayout(
+                  plotlyOutput('plot'),
+                  actionButton('clear_sel_button', 'Reset Selection', style="float: right;")
+                )
     )
   )
 )
 
 # Server logic ----
 server <- function(input, output, session) {
+  
+  # variables to allow for reseting plots
+  scatter_plot <- reactiveVal(NULL)
+  map_plot <- reactiveVal(NULL)
   
   # create shared data frame for all plots
   merged_shape <- merge(comm_shape, eco_indicators_df,
@@ -99,13 +108,20 @@ server <- function(input, output, session) {
   source('draw_map.R')
   
   output$plot <- renderPlotly({
-    scatter_indicators(shared_df,
-                       x = input$indicator,
-                       color_by = input$color_by)
+    scatter_plot(scatter_indicators(shared_df,
+                                    x = input$indicator,
+                                    color_by = input$color_by))
+    return(scatter_plot())
   })
   
   output$map <- renderPlotly({
-    draw_comm_areas(shared_df)
+    map_plot(draw_comm_areas(shared_df))
+    return(map_plot())
+  })
+  
+  observeEvent(input$clear_sel_button, {
+    scatter_plot(NULL)
+    map_plot(NULL)
   })
 }
 
