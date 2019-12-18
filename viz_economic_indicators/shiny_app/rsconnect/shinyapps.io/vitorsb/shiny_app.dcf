@@ -1,0 +1,10 @@
+name: shiny_app
+title:
+username:
+account: vitorsb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1607734
+bundleId: 2676388
+url: https://vitorsb.shinyapps.io/shiny_app/
+when: 1576612651.69864
