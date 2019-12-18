@@ -19,8 +19,11 @@ draw_comm_areas <- function(shared_df) {
                                          font = list(color='white')),
                        hoverinfo = "text",
                        text = ~paste(community,
-                                     '\nCrimes per Capita:', round(Crimes.per.Capita, digits = 3),
-                                     '\nUnemployment: ', round(Unemployment, digits = 1)),
+                                     '\n',
+                                     '\nCrimes per Capita:', round(Crimes.per.Capita, digits = 2),
+                                     '\n% Below Poverty Level:', round(Below.Poverty.Level, digits = 1),
+                                     '\nUnemployment: ', round(Unemployment, digits = 1),
+                                     '\nPer Capita Income: US$', round(Per.Capita.Income, digits = 1)),
                        source = 'map',
                        showlegend = FALSE) %>%
     config(displayModeBar = F)

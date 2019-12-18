@@ -29,6 +29,12 @@ scatter_indicators <- function(shared_df,
                           colors='Reds',
                           hoverinfo = 'text',
                           text = ~paste(Community.Area.Name),
+                          hovertemplate = paste(
+                            "<b>%{text}</b><br><br>",
+                            "%{yaxis.title.text}: %{y:.2f}<br>",
+                            "%{xaxis.title.text}: %{x:.2f}",
+                            "<extra></extra>"
+                          ),
                           source = 'scatter') %>%
     add_trace(type='scatter') %>%
     colorbar(title = list(text = guide_title)) %>%
