@@ -26,12 +26,12 @@ scatter_indicators <- function(shared_df,
   main_scatter <- plot_ly(shared_df,
                           x=~get(x), y=~get(y),
                           color=~get(color_by),
-                          # name = guide_title,
                           colors='Reds',
                           hoverinfo = 'text',
                           text = ~paste(Community.Area.Name),
                           source = 'scatter') %>%
     add_trace(type='scatter') %>%
+    colorbar(title = list(text = guide_title)) %>%
     layout(xaxis = list(title=x_label, zeroline=FALSE, fixedrange=TRUE),
            yaxis = list(title=y_label, zeroline=FALSE, fixedrange=TRUE)) %>%
     config(displayModeBar = F)
