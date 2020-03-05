@@ -1,0 +1,12 @@
+name: chicago_crimes_economic
+title: chicago_crimes_economic
+username:
+account: vitorsb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1908580
+bundleId: 2854398
+url: https://vitorsb.shinyapps.io/chicago_crimes_economic/
+when: 1583427836.26484
+asMultiple: FALSE
+asStatic: FALSE
